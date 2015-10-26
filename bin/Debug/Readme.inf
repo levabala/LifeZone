@@ -1,0 +1,13 @@
+LifeZone v1.1
+
+Управление:
+	Tab = Частичная прорисовка - упор на скорость просчета
+	+   = увеличение масштаба
+	-   = уменьшение масштаба
+	0 на NumPad = сброс масштабирования
+	F   = Fullscreen/SizeScreen
+	P   = Paralelling/Unparalelling
+	A   = new Balls
+	MouseClick = new Ball
+
+Good luck!
