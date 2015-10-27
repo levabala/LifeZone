@@ -76,7 +76,7 @@ namespace LifeZone
                     {
                         try
                         {
-                            balls.Add(new Ball(b.position, lifezoneBorderX, lifezoneBorderY));
+                            balls.Add(new Ball(b.position, lifezoneBorderX, lifezoneBorderY, b, b.partner));
                             b.readyToClone = false;
                             b.size = b.size / 2;
                         }

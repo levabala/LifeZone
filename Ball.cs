@@ -18,11 +18,13 @@ namespace LifeZone
         public Vector position, moving;
         public PointF mouse;
         public bool readyToClone, grudge, followTheMouse, young;
-        public int friends;             
+        public int friends;
+        public Ball partner;
+      
         public Ball(float bx, float by)
         {
             this.size = 10f;
-            this.lifetime = 1000f;
+            this.lifetime = 2000f;
             this.famine = 0;
             this.xp = 100;
             this.experience = 0;
@@ -46,9 +48,10 @@ namespace LifeZone
             this.mouse = new PointF();
             this.rotateSpeed = 0.1f;
         }
+
         public Ball(Vector posit, float bx, float by)
         {
-            this.lifetime = 1000f;
+            this.lifetime = 2000f;
             this.size = 10f;
             this.famine = 0;
             this.xp = 100;
@@ -72,6 +75,34 @@ namespace LifeZone
             this.young = true;
             this.mouse = new PointF();
             this.rotateSpeed = 0.1f;
+        }
+
+        public Ball(Vector posit, float bx, float by, Ball parent1, Ball parent2)
+        {
+            this.lifetime = 2000f;
+            this.size = 10f;
+            this.famine = 0;
+            this.xp = 100;
+            this.experience = 0;
+            this.speed = 5f;
+            this.activity = 1;
+            this.age = 0;
+            this.danger = 1;
+            this.fear = 1;
+            this.position = posit;
+            this.moving = new Vector(5f, 1f, this.position.endPoint);
+            this.balls = new List<Ball>();
+            this.foods = new List<Food>();
+            this.random = new Random();
+            this.readyToClone = false;
+            this.grudge = false;
+            this.seezone = 100f;
+            this.friends = 0;
+            this.xBorder = bx;
+            this.yBorder = by;
+            this.young = true;
+            this.mouse = new PointF();
+            this.rotateSpeed = (parent1.rotateSpeed + parent2.rotateSpeed)/2 + (float)(random.Next(-100,100)/1000);
         }
 
         public string delegateMyself()
@@ -153,8 +184,13 @@ namespace LifeZone
                 {
                     this.moving.length = -this.moving.length;
                     this.size += 0.1f;
-                    this.fear += (float)this.friends / 200;
+                    if (this.size >= 20f)
+                    {
+                        this.readyToClone = true;
+                        this.partner = targetBall;
+                    }                    
                 }
+                this.fear += (float)this.friends / 200;
             }
             catch(NullReferenceException)
             {
@@ -221,8 +257,7 @@ namespace LifeZone
             if (this.age < this.lifetime * 0.6f)
             {
                 if (this.famine < 5)
-                {
-                    if (this.size >= 20f) this.readyToClone = true;
+                {                    
                     speedCalc(); //Делаем непостоянность в движении и задаём скорость            
                     if (danger + fear < 5 && !grudge && young) setMoveToClosest(); //Находим наиблизлежащего и задаём направление к нему
                     else

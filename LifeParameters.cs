@@ -67,10 +67,10 @@ namespace LifeZone
         private void LifeParameters_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            total = drawGraph(g, total, 250, Pens.SeaGreen, Brushes.SeaGreen, true);
-            actives = drawGraph(g, actives, 450, Pens.Firebrick, Brushes.Firebrick, true);
-            passives = drawGraph(g, passives, 650, Pens.Blue, Brushes.Blue, true);
-            oldes = drawGraph(g, oldes, 850, Pens.Black, Brushes.Black, true);
+            total = drawGraph(g, total, (Height - 100) / 5 + 10, Pens.SeaGreen, Brushes.SeaGreen, true);
+            actives = drawGraph(g, actives, (Height - 100) / 5 * 2+ 10, Pens.Firebrick, Brushes.Firebrick, true);
+            passives = drawGraph(g, passives, (Height - 100) / 5 * 3+ 10, Pens.Blue, Brushes.Blue, true);
+            oldes = drawGraph(g, oldes, (Height - 100) / 5 * 4 + 10, Pens.Black, Brushes.Black, true);
         }
 
         private List<int> drawGraph(Graphics g, List<int> numbers, int graphX, Pen color, Brush textColor, bool absolute)
@@ -81,7 +81,13 @@ namespace LifeZone
             List<int> newList = numbers;
             if (numbers.Count > 0)
             {
-                numbers = compressLocal(numbers);
+                for (int i = 0; i < numbers.Count - 1; i++)
+                    if (numbers[i] >= hight)
+                    {
+                        hight = numbers[i];
+                        index = i;
+                    }
+                numbers = compressLocal(numbers, index);
                 coff = ((float)Width - 80) / (float)numbers.Count;
                 PointF[] points = new PointF[numbers.Count + 1];
                 points[0] = new PointF(60, graphX);                   
@@ -110,7 +116,7 @@ namespace LifeZone
                 g.DrawLine(Pens.LightSkyBlue, 10f, graphX - numbers[numbers.Count - 1] / globalGraphCoef, Width, graphX - numbers[numbers.Count - 1] / globalGraphCoef);
             }
 
-            if (hight / globalGraphCoef > 230) globalGraphCoef += 0.1f;
+            if (hight / globalGraphCoef > (Height - 100) / 5 + 30) globalGraphCoef += 0.1f;
 
             return newList;
         }
