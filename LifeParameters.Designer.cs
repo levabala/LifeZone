@@ -30,6 +30,7 @@
         {
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
+            this.absoluteMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,7 +45,7 @@
             this.trackBar1.Size = new System.Drawing.Size(526, 56);
             this.trackBar1.TabIndex = 0;
             this.trackBar1.TickFrequency = 100;
-            this.trackBar1.Value = 1000;
+            this.trackBar1.Value = 100;
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             this.trackBar1.DragOver += new System.Windows.Forms.DragEventHandler(this.trackBar1_DragOver);
             this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
@@ -59,12 +60,26 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Refresh speed";
             // 
+            // absoluteMode
+            // 
+            this.absoluteMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.absoluteMode.AutoSize = true;
+            this.absoluteMode.Checked = true;
+            this.absoluteMode.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.absoluteMode.Location = new System.Drawing.Point(132, 712);
+            this.absoluteMode.Name = "absoluteMode";
+            this.absoluteMode.Size = new System.Drawing.Size(124, 21);
+            this.absoluteMode.TabIndex = 2;
+            this.absoluteMode.Text = "Absolute mode";
+            this.absoluteMode.UseVisualStyleBackColor = true;
+            // 
             // LifeParameters
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(551, 803);
+            this.Controls.Add(this.absoluteMode);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.trackBar1);
             this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -87,6 +102,7 @@
 
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox absoluteMode;
 
     }
 }

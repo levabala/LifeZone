@@ -122,36 +122,43 @@ namespace LifeZone
 
         public void setMoveToClosest()
         {
-            Vector dist = balls[0].position;            
-            Ball targetBall = balls[0];
-            this.friends = 0;
-            Parallel.ForEach(balls, b =>
-            //foreach (Ball b in balls)
+            try
             {
-                if (b != null)
+                Vector dist = balls[0].position;
+                Ball targetBall = balls[0];
+                this.friends = 0;
+                Parallel.ForEach(balls, b =>
+                //foreach (Ball b in balls)
                 {
-                    Vector thisDist = new Vector(this.position.endPoint, b.position.endPoint);
-                    if (thisDist.length <= this.seezone)
+                    if (b != null)
                     {
-                        this.friends++;
-                    }
-                    if (b.position != this.position && b.young && !b.grudge)
-                    {                        
-                        if (thisDist.length < dist.length)
+                        Vector thisDist = new Vector(this.position.endPoint, b.position.endPoint);
+                        if (thisDist.length <= this.seezone)
                         {
-                            dist = thisDist;
-                            targetBall = b;
-                        }                        
+                            this.friends++;
+                        }
+                        if (b.position != this.position && b.young && !b.grudge)
+                        {
+                            if (thisDist.length < dist.length)
+                            {
+                                dist = thisDist;
+                                targetBall = b;
+                            }
+                        }
                     }
+                });
+                if (this.moving.alpha >= dist.alpha) this.moving.alpha -= this.rotateSpeed;
+                else this.moving.alpha += this.rotateSpeed;
+                if (this.size / 2 + targetBall.size / 2 >= dist.length)
+                {
+                    this.moving.length = -this.moving.length;
+                    this.size += 0.1f;
+                    this.fear += (float)this.friends / 200;
                 }
-            });
-            if (this.moving.alpha >= dist.alpha) this.moving.alpha -= this.rotateSpeed;
-            else this.moving.alpha += this.rotateSpeed;            
-            if (this.size/2 + targetBall.size/2 >= dist.length)
-            {                
-                this.moving.length = -this.moving.length;
-                this.size += 0.1f;
-                this.fear += (float)this.friends/200;                
+            }
+            catch(NullReferenceException)
+            {
+                
             }
         }
 

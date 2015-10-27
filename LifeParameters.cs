@@ -16,8 +16,10 @@ namespace LifeZone
         public List<int> passives = new List<int>();
         public List<int> actives = new List<int>();
         public List<int> oldes = new List<int>();
+        float comprCoef = 1f;
         private int actComprTimes;
         private Timer t = new Timer();
+        private float globalGraphCoef = 0.8f;
         public LifeParameters()
         {
             InitializeComponent();
@@ -39,7 +41,7 @@ namespace LifeZone
             Invalidate();
         }
 
-        public List<int> compress(List<int> list, int indexOfBiggest)
+        public List<int> compressLocal(List<int> list, int indexOfBiggest)
         {
             List<int> result = new List<int>();
             Random rnd = new Random();
@@ -51,150 +53,68 @@ namespace LifeZone
             return result;
         }
 
+        public List<int> compressLocal(List<int> list)
+        {
+            List<int> result = new List<int>();
+            Random rnd = new Random();
+            for (int i = 0; i < list.Count - 2; i += 2)
+            {
+                result.Add((list[i] + list[i + 1]) / 2);
+            }
+            return result;
+        } 
+
         private void LifeParameters_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            totalDraw(g);
-            activesDraw(g);
-            passivesDraw(g);
-            oldesDraw(g);
+            total = drawGraph(g, total, 250, Pens.SeaGreen, Brushes.SeaGreen, true);
+            actives = drawGraph(g, actives, 450, Pens.Firebrick, Brushes.Firebrick, true);
+            passives = drawGraph(g, passives, 650, Pens.Blue, Brushes.Blue, true);
+            oldes = drawGraph(g, oldes, 850, Pens.Black, Brushes.Black, true);
         }
 
-        public void totalDraw(Graphics g)
+        private List<int> drawGraph(Graphics g, List<int> numbers, int graphX, Pen color, Brush textColor, bool absolute)
         {
-            int graphX = 250;
-            float graphCoef = 0.8f;
-            List<int> numbers = total;
-            Pen color = Pens.SeaGreen;
-            Brush textColor = Brushes.SeaGreen;
-
             int index = 0;
-            float coff = 1f;
             float hight = 0;
-            if (numbers.Count > Width - 10) coff = (float)Width / (float)numbers.Count;            
-            for (int i = 0; i < numbers.Count; i++)
-            {
-                float thishight = numbers[i] / graphCoef;
-                if (thishight >= hight) 
-                {
-                    hight = thishight;
-                    index = i;
-                }
-                g.DrawLine(color, coff * i + 60, graphX, coff * i + 60, graphX - thishight);
-            }
-            if (coff <= 0.5f) numbers = compress(numbers, index);
-            g.DrawLine(color, 10f, graphX-hight, Width, graphX-hight);            
-            g.DrawString((hight* graphCoef).ToString() + "(max)", new Font("Arial", 8f),textColor, new PointF(0,graphX-hight-14));
+            float coff = ((float)Width-80) / (float)numbers.Count;
+            List<int> newList = numbers;
             if (numbers.Count > 0)
             {
-                g.DrawString(numbers[numbers.Count - 1].ToString() + "(now)", new Font("Arial", 8f), textColor, new PointF(0, graphX - numbers[numbers.Count - 1] / graphCoef));
-                g.DrawLine(color, 10f, graphX - numbers[numbers.Count - 1] / graphCoef, Width, graphX - numbers[numbers.Count - 1] / graphCoef);
-            }
-
-            total = numbers;
-        }
-
-        public void passivesDraw(Graphics g)
-        {
-            int graphX = 400;
-            float graphCoef = 0.8f;
-            List<int> numbers = passives;
-            Pen color = Pens.Blue;
-            Brush textColor = Brushes.Blue;
-
-            int index = 0;
-            float coff = 1f;
-            float hight = 0;
-            if (numbers.Count > Width - 10) coff = (float)Width / (float)numbers.Count;
-            for (int i = 0; i < numbers.Count; i++)
-            {
-                float thishight = numbers[i] / graphCoef;
-                if (thishight >= hight)
+                numbers = compressLocal(numbers);
+                coff = ((float)Width - 80) / (float)numbers.Count;
+                PointF[] points = new PointF[numbers.Count + 1];
+                points[0] = new PointF(60, graphX);                   
+                for (int i = 0; i < numbers.Count - 1; i++)
                 {
-                    hight = thishight;
-                    index = i;
+                    float thishight = numbers[i] / globalGraphCoef;
+                    if (thishight >= hight)
+                    {
+                        hight = thishight;
+                        index = i;
+                    }
+                    //g.DrawLine(color, coff * i + 60, graphX, coff * i + 60, graphX - thishight);
+                    points[i] = new PointF(coff * i + 60, graphX - thishight / globalGraphCoef);
                 }
-                g.DrawLine(color, coff * i + 60, graphX, coff * i + 60, graphX - thishight);
+                points[points.Length - 2] = new PointF(coff * numbers.Count + 60, graphX);
+                points[points.Length - 1] = new PointF(60, graphX);
+                g.FillPolygon(textColor, points);
+                //if (coff <= 0.5f) compressAbsolute(numbers, index);
+                if (coff <= 0.1f) newList = compressLocal(numbers, index);
             }
-            if (coff <= 0.5f) numbers = compress(numbers, index);
-            g.DrawLine(color, 10f, graphX - hight, Width, graphX - hight);
-            g.DrawString((hight * graphCoef).ToString() + "(max)", new Font("Arial", 8f), textColor, new PointF(0, graphX - hight - 14));
+            g.DrawLine(color, 10f, graphX - hight / globalGraphCoef, Width, graphX - hight / globalGraphCoef);
+            g.DrawString((hight * globalGraphCoef).ToString() + "(max)", new Font("Arial", 8f), textColor, new PointF(0, graphX - hight / globalGraphCoef - 14));
             if (numbers.Count > 0)
             {
-                g.DrawString(numbers[numbers.Count - 1].ToString() + "(now)", new Font("Arial", 8f), textColor, new PointF(0, graphX - numbers[numbers.Count - 1] / graphCoef));
-                g.DrawLine(color, 10f, graphX - numbers[numbers.Count - 1] / graphCoef, Width, graphX - numbers[numbers.Count - 1] / graphCoef);
+                g.DrawString(numbers[numbers.Count - 1].ToString() + "(now)", new Font("Arial", 8f), textColor, new PointF(0, graphX - numbers[numbers.Count - 1] / globalGraphCoef));
+                g.DrawLine(Pens.LightSkyBlue, 10f, graphX - numbers[numbers.Count - 1] / globalGraphCoef, Width, graphX - numbers[numbers.Count - 1] / globalGraphCoef);
             }
 
-            passives = numbers;
+            if (hight / globalGraphCoef > 230) globalGraphCoef += 0.1f;
+
+            return newList;
         }
 
-        public void activesDraw(Graphics g)
-        {
-            int graphX = 600;
-            float graphCoef = 0.8f;
-            List<int> numbers = actives;
-            Pen color = Pens.Firebrick;
-            Brush textColor = Brushes.Firebrick;
-
-            int index = 0;
-            float coff = 1f;
-            float hight = 0;
-            if (numbers.Count > Width - 10) coff = (float)Width / (float)numbers.Count;
-            for (int i = 0; i < numbers.Count; i++)
-            {
-                float thishight = numbers[i] / graphCoef;
-                if (thishight >= hight)
-                {
-                    hight = thishight;
-                    index = i;
-                }
-                g.DrawLine(color, coff * i + 60, graphX, coff * i + 60, graphX - thishight);
-            }
-            if (coff <= 0.5f) numbers = compress(numbers, index);
-            g.DrawLine(color, 10f, graphX - hight, Width, graphX - hight);
-            g.DrawString((hight * graphCoef).ToString() + "(max)", new Font("Arial", 8f), textColor, new PointF(0, graphX - hight - 14));
-            if (numbers.Count > 0)
-            {
-                g.DrawString(numbers[numbers.Count - 1].ToString() + "(now)", new Font("Arial", 8f), textColor, new PointF(0, graphX - numbers[numbers.Count - 1] / graphCoef));
-                g.DrawLine(color, 10f, graphX - numbers[numbers.Count - 1] / graphCoef, Width, graphX - numbers[numbers.Count - 1] / graphCoef);
-            }
-
-            actives = numbers;
-        }
-
-        public void oldesDraw(Graphics g)
-        {
-            int graphX = 800;
-            float graphCoef = 0.8f;
-            List<int> numbers = oldes;
-            Pen color = Pens.Black;
-            Brush textColor = Brushes.Black;
-
-            int index = 0;
-            float coff = 1f;
-            float hight = 0;
-            if (numbers.Count > Width - 10) coff = (float)Width / (float)numbers.Count;
-            for (int i = 0; i < numbers.Count; i++)
-            {
-                float thishight = numbers[i] / graphCoef;
-                if (thishight >= hight)
-                {
-                    hight = thishight;
-                    index = i;
-                }
-                g.DrawLine(color, coff * i + 60, graphX, coff * i + 60, graphX - thishight);
-            }
-            if (coff <= 0.5f) numbers = compress(numbers, index);
-            g.DrawLine(color, 10f, graphX - hight, Width, graphX - hight);
-            g.DrawString((hight * graphCoef).ToString() + "(max)", new Font("Arial", 8f), textColor, new PointF(0, graphX - hight - 14));
-            if (numbers.Count > 0)
-            {
-                g.DrawString(numbers[numbers.Count - 1].ToString() + "(now)", new Font("Arial", 8f), textColor, new PointF(0, graphX - numbers[numbers.Count - 1] / graphCoef));
-                g.DrawLine(color, 10f, graphX - numbers[numbers.Count - 1] / graphCoef, Width, graphX - numbers[numbers.Count - 1] / graphCoef);
-            }
-
-            oldes = numbers;
-        }
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {

@@ -121,6 +121,7 @@ namespace LifeZone
                 
                 Invalidate();
             }
+            
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -220,7 +221,7 @@ namespace LifeZone
                 updateMatrix();
             }
             else if (e.KeyCode == Keys.O)
-            {
+            {                
                 if (lifeparam == null)
                 {
                     lifeparam = new LifeParameters();
