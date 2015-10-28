@@ -1,0 +1,10 @@
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\bin\Debug\LifeZone.exe.config
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\bin\Debug\LifeZone.exe
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\bin\Debug\LifeZone.pdb
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\obj\Debug\LifeZone.Form1.resources
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\obj\Debug\LifeZone.Properties.Resources.resources
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\obj\Debug\LifeZone.csproj.GenerateResource.Cache
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\obj\Debug\LifeZone.exe
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\obj\Debug\LifeZone.pdb
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\obj\Debug\LifeZone.csprojResolveAssemblyReference.cache
+C:\Users\levabala\Documents\Visual Studio 2012\Projects\WindowsFormsApplication1\LifeZone\obj\Debug\LifeZone.LifeParameters.resources
